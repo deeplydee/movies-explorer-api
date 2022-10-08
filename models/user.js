@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
-const { isEmail } = require('validator/lib/isEmail');
+const bcrypt = require('bcryptjs');
+const isEmail = require('validator/lib/isEmail');
+
+const UnauthorizedError = require('../helpers/errors/unauthorized-error');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -16,10 +19,33 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    default: 'Александр',
     minlength: 2,
     maxlength: 30,
   },
 });
+
+userSchema.methods.toJSON = function hideCredentials() {
+  const user = this.toObject();
+  delete user.password;
+  return user;
+};
+
+userSchema.statics.findUserByCredentials = async function findUserByCredentials(
+  email,
+  password,
+  next,
+) {
+  const user = await this.findOne({ email }).select('+password');
+  if (!user) {
+    return next(new UnauthorizedError('Неправильные почта или пароль'));
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return next(new UnauthorizedError('Неправильные почта или пароль'));
+  }
+
+  return user;
+};
 
 module.exports = mongoose.model('user', userSchema);

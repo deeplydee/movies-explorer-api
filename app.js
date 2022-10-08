@@ -7,7 +7,11 @@ const { PORT = 3000 } = process.env;
 
 const { errorHandler } = require('./middlewares/error-handler');
 
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
 const app = express();
+
+app.use(requestLogger);
 
 app.use(routes);
 
@@ -21,5 +25,7 @@ const main = async () => {
 };
 
 main();
+
+app.use(errorLogger);
 
 app.use(errorHandler);

@@ -6,10 +6,10 @@ const User = require('../models/user');
 
 const {
   CREATED_CODE,
-  idErrorMessage,
-  emailErrorMessage,
-  validationErrorMessage,
-  credentialsErrorMessage,
+  ID_ERR_MESSAGE,
+  EMAIL_ERR_MESSAGE,
+  VALIDATION_ERR_MESSAGE,
+  CREDENTIALS_ERR_MESSAGE,
 } = require('../helpers/constants');
 
 const BadRequestError = require('../helpers/errors/bad-request-error');
@@ -18,6 +18,8 @@ const NotFoundError = require('../helpers/errors/not-found-error');
 const ConflictError = require('../helpers/errors/conflict-error');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
+
+const { JWT_SECRET_DEV } = require('../helpers/config');
 
 const createUser = async (req, res, next) => { // POST '/users/signup'
   const {
@@ -37,11 +39,11 @@ const createUser = async (req, res, next) => { // POST '/users/signup'
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      next(new BadRequestError(validationErrorMessage));
+      next(new BadRequestError(VALIDATION_ERR_MESSAGE));
       return;
     }
     if (err.code === 11000) {
-      next(new ConflictError(emailErrorMessage));
+      next(new ConflictError(EMAIL_ERR_MESSAGE));
       return;
     }
     next(err);
@@ -54,7 +56,7 @@ const login = async (req, res, next) => { // POST '/users/signin'
     const user = await User.findUserByCredentials(email, password);
     const token = jwt.sign(
       { _id: user._id },
-      NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-key',
+      NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET_DEV,
       { expiresIn: '7d' },
     );
     res.cookie('jwt', token, {
@@ -64,14 +66,14 @@ const login = async (req, res, next) => { // POST '/users/signin'
       // secure: true,
     }).send({ data: user.toJSON() });
   } catch (err) {
-    next(new UnauthorizedError(credentialsErrorMessage));
+    next(new UnauthorizedError(CREDENTIALS_ERR_MESSAGE));
   }
 };
 
 const getUserInfo = async (req, res, next) => { // GET '/users/me'
   try {
     const user = await User.findById({ _id: req.user._id })
-      .orFail(() => next(new NotFoundError(idErrorMessage)));
+      .orFail(() => next(new NotFoundError(ID_ERR_MESSAGE)));
     res.send({ data: user });
   } catch (err) {
     next(err);
@@ -86,11 +88,11 @@ const updateUserProfile = async (req, res, next) => { // PATCH '/users/me'
       { name, email },
       { new: true, runValidators: true },
     )
-      .orFail(() => next(new NotFoundError(idErrorMessage)));
+      .orFail(() => next(new NotFoundError(ID_ERR_MESSAGE)));
     res.send({ data: user });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      next(new BadRequestError(validationErrorMessage));
+      next(new BadRequestError(VALIDATION_ERR_MESSAGE));
       return;
     }
     next(err);

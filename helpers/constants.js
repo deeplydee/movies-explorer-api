@@ -6,13 +6,13 @@ const NOT_FOUND_CODE = 404;
 const CONFLICT_CODE = 409;
 const INTERNAL_SERVER_ERROR_CODE = 500;
 
-const idErrorMessage = 'Пользователь по указанному id не найден';
-const emailErrorMessage = 'Пользователь с таким email уже существует';
-const validationErrorMessage = 'Переданы некорректные данные';
-const credentialsErrorMessage = 'Неправильные почта или пароль';
-const authErrorMessage = 'Необходима авторизация';
-const notFoundErrorMessage = 'Не найдено';
-const serverErrorMessage = 'На сервере произошла ошибка';
+const ID_ERR_MESSAGE = 'Пользователь по указанному id не найден';
+const EMAIL_ERR_MESSAGE = 'Пользователь с таким email уже существует';
+const VALIDATION_ERR_MESSAGE = 'Переданы некорректные данные';
+const CREDENTIALS_ERR_MESSAGE = 'Неправильные почта или пароль';
+const AUTH_ERR_MESSAGE = 'Необходима авторизация';
+const NOT_FOUND_ERR_MESSAGE = 'Не найдено';
+const SERVER_ERR_MESSAGE = 'На сервере произошла ошибка';
 
 module.exports = {
   CREATED_CODE,
@@ -22,11 +22,11 @@ module.exports = {
   NOT_FOUND_CODE,
   CONFLICT_CODE,
   INTERNAL_SERVER_ERROR_CODE,
-  idErrorMessage,
-  emailErrorMessage,
-  validationErrorMessage,
-  credentialsErrorMessage,
-  authErrorMessage,
-  notFoundErrorMessage,
-  serverErrorMessage,
+  ID_ERR_MESSAGE,
+  EMAIL_ERR_MESSAGE,
+  VALIDATION_ERR_MESSAGE,
+  CREDENTIALS_ERR_MESSAGE,
+  AUTH_ERR_MESSAGE,
+  NOT_FOUND_ERR_MESSAGE,
+  SERVER_ERR_MESSAGE,
 };

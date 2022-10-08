@@ -1,10 +1,14 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 
 const { routes } = require('./routes');
 
-const { PORT = 3000 } = process.env;
+const { MONGO_DB_DEV } = require('./helpers/config');
+
+const { PORT = 3000, NODE_ENV, MONGO_DB } = process.env;
 
 const { errorHandler } = require('./middlewares/error-handler');
 
@@ -18,7 +22,7 @@ app.use(routes);
 
 const main = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27017/moviesdb');
+    await mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : MONGO_DB_DEV);
     app.listen(PORT);
   } catch (err) {
     console.log(err.message);

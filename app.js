@@ -15,11 +15,15 @@ const { errorHandler } = require('./middlewares/error-handler');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+const rateLimit = require('./middlewares/rate-limit');
+
 const app = express();
 
 app.use(helmet());
 
 app.use(requestLogger);
+
+app.use(rateLimit);
 
 app.use(routes);
 

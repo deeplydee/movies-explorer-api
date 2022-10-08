@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
 
 const { routes } = require('./routes');
 
@@ -27,5 +28,7 @@ const main = async () => {
 main();
 
 app.use(errorLogger);
+
+app.use(errors());
 
 app.use(errorHandler);

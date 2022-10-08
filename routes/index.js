@@ -11,11 +11,13 @@ const routes = express.Router();
 
 const { userRoutes } = require('./users');
 
+const { validationCreateUser, validationLogin } = require('../helpers/validation');
+
 routes.use(express.json());
 routes.use(cookieParser());
 
-routes.use('/signup', createUser);
-routes.use('/signin', login);
+routes.use('/signup', validationCreateUser, createUser);
+routes.use('/signin', validationLogin, login);
 routes.use('/signout', signOut);
 
 routes.use(auth);

@@ -7,6 +7,8 @@ const { createUser, login, signOut } = require('../controllers/users');
 
 const NotFoundError = require('../helpers/errors/not-found-error');
 
+const { notFoundErrorMessage } = require('../helpers/constants');
+
 const routes = express.Router();
 
 const { userRoutes } = require('./users');
@@ -25,7 +27,7 @@ routes.use(auth);
 routes.use('/users', userRoutes);
 
 routes.use((req, res, next) => {
-  next(new NotFoundError('Не найдено'));
+  next(new NotFoundError(notFoundErrorMessage));
 });
 
 module.exports = { routes };

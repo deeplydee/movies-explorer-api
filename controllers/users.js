@@ -4,7 +4,13 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-const { CREATED_CODE } = require('../helpers/constants');
+const {
+  CREATED_CODE,
+  idErrorMessage,
+  emailErrorMessage,
+  validationErrorMessage,
+  credentialsErrorMessage,
+} = require('../helpers/constants');
 
 const BadRequestError = require('../helpers/errors/bad-request-error');
 const UnauthorizedError = require('../helpers/errors/unauthorized-error');
@@ -31,11 +37,11 @@ const createUser = async (req, res, next) => { // POST '/users/signup'
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
+      next(new BadRequestError(validationErrorMessage));
       return;
     }
     if (err.code === 11000) {
-      next(new ConflictError('Пользователь с таким email уже существует'));
+      next(new ConflictError(emailErrorMessage));
       return;
     }
     next(err);
@@ -58,14 +64,14 @@ const login = async (req, res, next) => { // POST '/users/signin'
       // secure: true,
     }).send({ data: user.toJSON() });
   } catch (err) {
-    next(new UnauthorizedError('Неправильные почта или пароль'));
+    next(new UnauthorizedError(credentialsErrorMessage));
   }
 };
 
 const getUserInfo = async (req, res, next) => { // GET '/users/me'
   try {
     const user = await User.findById({ _id: req.user._id })
-      .orFail(() => next(new NotFoundError('Пользователь по указанному id не найден')));
+      .orFail(() => next(new NotFoundError(idErrorMessage)));
     res.send({ data: user });
   } catch (err) {
     next(err);
@@ -80,11 +86,11 @@ const updateUserProfile = async (req, res, next) => { // PATCH '/users/me'
       { name, email },
       { new: true, runValidators: true },
     )
-      .orFail(() => next(new NotFoundError('Пользователь по указанному id не найден')));
+      .orFail(() => next(new NotFoundError(idErrorMessage)));
     res.send({ data: user });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
+      next(new BadRequestError(validationErrorMessage));
       return;
     }
     next(err);

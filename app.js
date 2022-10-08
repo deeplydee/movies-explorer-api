@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 
 const { routes } = require('./routes');
 
@@ -15,6 +16,8 @@ const { errorHandler } = require('./middlewares/error-handler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
+
+app.use(helmet());
 
 app.use(requestLogger);
 

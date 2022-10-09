@@ -2,20 +2,20 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
-const { errors } = require('celebrate');
 const helmet = require('helmet');
-
-const { routes } = require('./routes');
-
-const { MONGO_DB_DEV } = require('./helpers/config');
+const { errors } = require('celebrate');
 
 const { PORT = 3000, NODE_ENV, MONGO_DB } = process.env;
 
-const { errorHandler } = require('./middlewares/error-handler');
+const { MONGO_DB_DEV } = require('./helpers/config');
+
+const { routes } = require('./routes');
+
+const rateLimit = require('./middlewares/rate-limit');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const rateLimit = require('./middlewares/rate-limit');
+const { errorHandler } = require('./middlewares/error-handler');
 
 const app = express();
 

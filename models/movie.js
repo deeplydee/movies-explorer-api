@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { isURL } = require('validator/lib/isURL');
+const isURL = require('validator/lib/isURL');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -56,4 +56,4 @@ const movieSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('user', movieSchema);
+module.exports = mongoose.model('movie', movieSchema);

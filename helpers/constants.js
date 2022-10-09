@@ -10,9 +10,12 @@ const ID_ERR_MESSAGE = 'Пользователь по указанному id н
 const EMAIL_ERR_MESSAGE = 'Пользователь с таким email уже существует';
 const VALIDATION_ERR_MESSAGE = 'Переданы некорректные данные';
 const CREDENTIALS_ERR_MESSAGE = 'Неправильные почта или пароль';
+const FORBIDDEN_ERR_MESSAGE = 'Доступ к запрошенному ресурсу запрещён';
 const AUTH_ERR_MESSAGE = 'Необходима авторизация';
 const NOT_FOUND_ERR_MESSAGE = 'Не найдено';
 const SERVER_ERR_MESSAGE = 'На сервере произошла ошибка';
+
+const REGEXP = /https?:\/\/(www)?[a-z0-9-]+\.[a-z0-9\S]{2,}/;
 
 module.exports = {
   CREATED_CODE,
@@ -26,7 +29,9 @@ module.exports = {
   EMAIL_ERR_MESSAGE,
   VALIDATION_ERR_MESSAGE,
   CREDENTIALS_ERR_MESSAGE,
+  FORBIDDEN_ERR_MESSAGE,
   AUTH_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
   SERVER_ERR_MESSAGE,
+  REGEXP,
 };

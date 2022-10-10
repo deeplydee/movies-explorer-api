@@ -46,10 +46,6 @@ const deleteMovie = async (req, res, next) => { // DELETE '/movies/_id'
     const delMovie = await Movie.findByIdAndRemove({ _id: req.params._id });
     res.send({ data: delMovie });
   } catch (err) {
-    if (err instanceof mongoose.Error.CastError) {
-      next(new BadRequestError(VALIDATION_ERR_MESSAGE));
-      return;
-    }
     next(err);
   }
 };

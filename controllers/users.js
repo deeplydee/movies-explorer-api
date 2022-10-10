@@ -95,6 +95,10 @@ const updateUserProfile = async (req, res, next) => { // PATCH '/users/me'
       next(new BadRequestError(VALIDATION_ERR_MESSAGE));
       return;
     }
+    if (err.code === 11000) {
+      next(new ConflictError(EMAIL_ERR_MESSAGE));
+      return;
+    }
     next(err);
   }
 };

@@ -14,6 +14,7 @@ const FORBIDDEN_ERR_MESSAGE = 'Доступ к запрошенному ресу
 const AUTH_ERR_MESSAGE = 'Необходима авторизация';
 const NOT_FOUND_ERR_MESSAGE = 'Не найдено';
 const SERVER_ERR_MESSAGE = 'На сервере произошла ошибка';
+const SUCCESSFUL_EXIT_MESSAGE = 'Пользователь успешно вышел из системы';
 
 const REGEXP = /https?:\/\/(www)?[a-z0-9-]+\.[a-z0-9\S]{2,}/;
 
@@ -34,4 +35,5 @@ module.exports = {
   NOT_FOUND_ERR_MESSAGE,
   SERVER_ERR_MESSAGE,
   REGEXP,
+  SUCCESSFUL_EXIT_MESSAGE,
 };

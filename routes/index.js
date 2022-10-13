@@ -24,12 +24,13 @@ routes.use(cookieParser());
 
 routes.use('/signup', validationCreateUser, createUser);
 routes.use('/signin', validationLogin, login);
-routes.use('/signout', signOut);
 
 routes.use(auth);
 
 routes.use('/users', userRoutes);
 routes.use('/movies', movieRoutes);
+
+routes.use('/signout', signOut);
 
 routes.use((req, res, next) => {
   next(new NotFoundError(NOT_FOUND_ERR_MESSAGE));

@@ -4,7 +4,7 @@ const isEmail = require('validator/lib/isEmail');
 
 const UnauthorizedError = require('../helpers/errors/unauthorized-error');
 
-const { credentialsErrorMessage } = require('../helpers/constants');
+const { CREDENTIALS_ERR_MESSAGE } = require('../helpers/constants');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -26,11 +26,13 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.methods.toJSON = function hideCredentials() {
-  const user = this.toObject();
-  delete user.password;
-  return user;
-};
+userSchema.set('toJSON', {
+  transform(doc, ret) {
+    const newRet = ret;
+    delete newRet.password;
+    return newRet;
+  },
+});
 
 userSchema.statics.findUserByCredentials = async function findUserByCredentials(
   email,
@@ -39,12 +41,12 @@ userSchema.statics.findUserByCredentials = async function findUserByCredentials(
 ) {
   const user = await this.findOne({ email }).select('+password');
   if (!user) {
-    return next(new UnauthorizedError(credentialsErrorMessage));
+    return next(new UnauthorizedError(CREDENTIALS_ERR_MESSAGE));
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return next(new UnauthorizedError(credentialsErrorMessage));
+    return next(new UnauthorizedError(CREDENTIALS_ERR_MESSAGE));
   }
 
   return user;

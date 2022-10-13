@@ -9,11 +9,10 @@ const {
   ID_ERR_MESSAGE,
   EMAIL_ERR_MESSAGE,
   VALIDATION_ERR_MESSAGE,
-  CREDENTIALS_ERR_MESSAGE,
+  SUCCESSFUL_EXIT_MESSAGE,
 } = require('../helpers/constants');
 
 const BadRequestError = require('../helpers/errors/bad-request-error');
-const UnauthorizedError = require('../helpers/errors/unauthorized-error');
 const NotFoundError = require('../helpers/errors/not-found-error');
 const ConflictError = require('../helpers/errors/conflict-error');
 
@@ -35,7 +34,7 @@ const createUser = async (req, res, next) => { // POST '/users/signup'
       password: hashedPassword,
     });
     res.status(CREATED_CODE).send({
-      data: user.toJSON(),
+      data: user,
     });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
@@ -53,7 +52,7 @@ const createUser = async (req, res, next) => { // POST '/users/signup'
 const login = async (req, res, next) => { // POST '/users/signin'
   const { email, password } = req.body;
   try {
-    const user = await User.findUserByCredentials(email, password);
+    const user = await User.findUserByCredentials(email, password, next);
     const token = jwt.sign(
       { _id: user._id },
       NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET_DEV,
@@ -64,9 +63,9 @@ const login = async (req, res, next) => { // POST '/users/signin'
       httpOnly: true,
       // sameSite: 'none',
       // secure: true,
-    }).send({ data: user.toJSON() });
+    }).send({ data: user });
   } catch (err) {
-    next(new UnauthorizedError(CREDENTIALS_ERR_MESSAGE));
+    next(err);
   }
 };
 
@@ -91,7 +90,10 @@ const updateUserProfile = async (req, res, next) => { // PATCH '/users/me'
       .orFail(() => next(new NotFoundError(ID_ERR_MESSAGE)));
     res.send({ data: user });
   } catch (err) {
-    if (err instanceof mongoose.Error.ValidationError) {
+    if (
+      err instanceof mongoose.Error.ValidationError
+      || err instanceof mongoose.Error.CastError
+    ) {
       next(new BadRequestError(VALIDATION_ERR_MESSAGE));
       return;
     }
@@ -104,7 +106,7 @@ const updateUserProfile = async (req, res, next) => { // PATCH '/users/me'
 };
 
 const signOut = (req, res) => { // GET 'signout'
-  res.clearCookie('jwt').send();
+  res.clearCookie('jwt').send({ message: SUCCESSFUL_EXIT_MESSAGE });
 };
 
 module.exports = {

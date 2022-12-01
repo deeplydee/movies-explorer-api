@@ -16,7 +16,7 @@ const NotFoundError = require('../helpers/errors/not-found-error');
 const getMovies = async (req, res, next) => { // GET '/movies'
   try {
     const movies = await Movie.find({ owner: req.user._id });
-    res.send({ data: movies });
+    res.send(movies);
   } catch (err) {
     next(err);
   }
@@ -25,7 +25,7 @@ const getMovies = async (req, res, next) => { // GET '/movies'
 const addMovie = async (req, res, next) => { // POST '/movies'
   try {
     const movie = await Movie.create({ ...req.body, owner: req.user._id });
-    res.status(CREATED_CODE).send({ data: movie });
+    res.status(CREATED_CODE).send(movie);
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
       next(new BadRequestError(VALIDATION_ERR_MESSAGE));
@@ -44,7 +44,7 @@ const deleteMovie = async (req, res, next) => { // DELETE '/movies/_id'
       return;
     }
     const delMovie = await Movie.findByIdAndRemove({ _id: req.params._id });
-    res.send({ data: delMovie });
+    res.send(delMovie);
   } catch (err) {
     next(err);
   }

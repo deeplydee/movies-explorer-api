@@ -33,9 +33,10 @@ const createUser = async (req, res, next) => { // POST '/users/signup'
       email,
       password: hashedPassword,
     });
-    res.status(CREATED_CODE).send({
-      data: user,
-    });
+    // res.status(CREATED_CODE).send({
+    //   data: user,
+    // });
+    res.status(CREATED_CODE).send(user);
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
       next(new BadRequestError(VALIDATION_ERR_MESSAGE));
@@ -61,9 +62,10 @@ const login = async (req, res, next) => { // POST '/users/signin'
     res.cookie('jwt', token, {
       maxAge: 3600000 * 24 * 7,
       httpOnly: true,
-      // sameSite: 'none',
-      // secure: true,
-    }).send({ data: user });
+      sameSite: 'none', // при localhost
+      secure: true, // при localhost
+    // }).send({ data: user });
+    }).send(user);
   } catch (err) {
     next(err);
   }
@@ -73,7 +75,8 @@ const getUserInfo = async (req, res, next) => { // GET '/users/me'
   try {
     const user = await User.findById({ _id: req.user._id })
       .orFail(() => next(new NotFoundError(ID_ERR_MESSAGE)));
-    res.send({ data: user });
+    // res.send({ data: user });
+    res.send(user);
   } catch (err) {
     next(err);
   }
@@ -88,7 +91,8 @@ const updateUserProfile = async (req, res, next) => { // PATCH '/users/me'
       { new: true, runValidators: true },
     )
       .orFail(() => next(new NotFoundError(ID_ERR_MESSAGE)));
-    res.send({ data: user });
+    // res.send({ data: user });
+    res.send(user);
   } catch (err) {
     if (
       err instanceof mongoose.Error.ValidationError

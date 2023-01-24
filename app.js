@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const cors = require('cors');
 const { errors } = require('celebrate');
 
 const { PORT = 3000, NODE_ENV, MONGO_DB } = process.env;
@@ -18,6 +19,12 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { errorHandler } = require('./middlewares/error-handler');
 
 const app = express();
+
+app.use(cors({
+  origin: ['http://movies.deeplydee.nomoredomains.icu', 'https://movies.deeplydee.nomoredomains.icu'],
+  // origin: ['http://localhost:3001', 'https://localhost:3001'],
+  credentials: true,
+}));
 
 app.use(helmet());
 

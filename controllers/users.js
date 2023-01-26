@@ -62,8 +62,8 @@ const login = async (req, res, next) => { // POST '/users/signin'
     res.cookie('jwt', token, {
       maxAge: 3600000 * 24 * 7,
       httpOnly: true,
-      // sameSite: 'none', // при localhost
-      // secure: true, // при localhost
+      sameSite: 'none', // при localhost
+      secure: true, // при localhost
     // }).send({ data: user });
     }).send(user);
   } catch (err) {

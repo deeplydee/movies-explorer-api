@@ -21,9 +21,8 @@ const { errorHandler } = require('./middlewares/error-handler');
 const app = express();
 
 app.use(cors({
-  // origin: ['http://movies.deeplydee.nomoredomains.icu', 'https://movies.deeplydee.nomoredomains.icu'],
+  origin: ['http://movies.deeplydee.nomoredomains.icu', 'https://movies.deeplydee.nomoredomains.icu'],
   // origin: ['http://localhost:3001', 'https://localhost:3001'],
-  origin: ['http://movies-explorer-frontend-ivory.vercel.app', 'https://movies-explorer-frontend-ivory.vercel.app'],
   credentials: true,
 }));
 
